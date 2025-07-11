@@ -8,6 +8,9 @@ import BooksPage from './components/pages/BooksPage';
 import MembersPage from './components/pages/MembersPage';
 import { useSelector } from 'react-redux';
 import type { RootState } from './store/store';
+import LoansPage from './components/pages/LoansPage';
+import ReportsPage from './components/pages/ReportsPage';
+import Settings from './components/pages/Settings';
 
 
 function App() {
@@ -30,9 +33,9 @@ function App() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="books" element={<BooksPage />} />
         <Route path="members" element={<MembersPage />} />
-        <Route path="loans" element={<div>Loans Page (Coming Soon)</div>} />
-        <Route path="reports" element={<div>Reports Page (Coming Soon)</div>} />
-        <Route path="settings" element={<div>Settings Page (Coming Soon)</div>} />
+        <Route path="loans" element={<LoansPage/> } />
+        <Route path="reports" element={ <ReportsPage/>} />
+        <Route path="settings" element={<Settings/>} />
       </Route>
     </Routes>
 
