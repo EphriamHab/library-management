@@ -2,24 +2,29 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { 
-  BookOpen, 
-  Users, 
-  Calendar, 
-  BarChart3, 
-  Settings, 
+import {
+  BookOpen,
+  Users,
+  Calendar,
+  BarChart3,
+  Settings,
   Home,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react';
 import { toggleSidebar } from '../../store/slices/uiSlice';
 import type { RootState } from '../../store/store';
+import { useAuth } from '../../context/AuthContext';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+
+  // ⬇️ still using Redux for UI
   const { sidebarOpen } = useSelector((state: RootState) => state.ui);
-  const { user } = useSelector((state: RootState) => state.auth);
+
+  // ⬇️ Auth comes from context, not Redux
+  const { user } = useAuth();
 
   const menuItems = [
     { icon: Home, label: 'Dashboard', path: '/dashboard' },
@@ -31,9 +36,12 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className={`fixed left-0 top-0 h-full bg-white border-r border-gray-200 transition-all duration-300 z-40 ${
-      sidebarOpen ? 'w-64' : 'w-16'
-    }`}>
+    <div
+      className={`fixed left-0 top-0 h-full bg-white border-r border-gray-200 transition-all duration-300 z-40 ${
+        sidebarOpen ? 'w-64' : 'w-16'
+      }`}
+    >
+      {/* Brand + Collapse Button */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         {sidebarOpen && (
           <div className="flex items-center space-x-2">
@@ -53,6 +61,7 @@ const Sidebar: React.FC = () => {
         </button>
       </div>
 
+      {/* Menu */}
       <nav className="mt-6">
         <ul className="space-y-2 px-3">
           {menuItems.map((item) => {
@@ -76,6 +85,7 @@ const Sidebar: React.FC = () => {
         </ul>
       </nav>
 
+      {/* User Block */}
       {sidebarOpen && user && (
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
           <div className="flex items-center space-x-3">
@@ -85,8 +95,8 @@ const Sidebar: React.FC = () => {
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
-              <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+              <p className="text-sm font-medium text-gray-900 truncate">{user.full_name}</p>
+              <p className="text-xs text-gray-500 capitalize">{user.user_type}</p>
             </div>
           </div>
         </div>
