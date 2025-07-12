@@ -1,18 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/components/layout/Header.tsx
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Search, LogOut, User } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
-import { forceLogout } from '../../store/slices/authSlice';
+import { useAuth } from '../../context/AuthContext';
+import { toggleSidebar } from '../../store/slices/uiSlice';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, logout } = useAuth();
+  const { sidebarOpen } = useSelector((state: RootState) => state.ui);
 
   const handleLogout = () => {
-    dispatch(forceLogout());
+    logout();
     navigate('/');
   };
 
@@ -31,6 +34,14 @@ const Header: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-4">
+          <button
+            onClick={() => dispatch(toggleSidebar())}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600 hover:text-gray-900"
+            aria-label="Toggle Sidebar"
+          >
+            {/* You could add an icon here if needed */}
+          </button>
+
           <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
             <Bell className="w-5 h-5" />
             <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -38,32 +49,34 @@ const Header: React.FC = () => {
             </span>
           </button>
 
-          <div className="relative group">
-            <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
-                  {user?.name.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-gray-700">{user?.name}</span>
-            </button>
+          {user && (
+            <div className="relative group">
+              <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <span className="text-sm font-medium text-gray-700">{user.full_name}</span>
+              </button>
 
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div className="py-2">
-                <button className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                  <User className="w-4 h-4" />
-                  <span>Profile</span>
-                </button>
-                <button 
-                  onClick={handleLogout}
-                  className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
-                </button>
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="py-2">
+                  <button className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                    <User className="w-4 h-4" />
+                    <span>Profile</span>
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </header>
