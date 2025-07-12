@@ -1,12 +1,26 @@
-// src/components/pages/Dashboard.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { useGetBooksQuery, useGetMembersQuery, useGetLoansQuery } from '../../store/api';
-import { BookOpen, Users, Calendar, AlertCircle, CheckCircle } from 'lucide-react';
+import {
+  useGetBooksQuery,
+  useGetMembersQuery,
+  useGetLoansQuery
+} from '../../store/api';
+import {
+  BookOpen,
+  Users,
+  Calendar,
+  AlertCircle,
+  CheckCircle
+} from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { data: books = [] } = useGetBooksQuery();
-  const { data: members = [] } = useGetMembersQuery();
-  const { data: loans = [] } = useGetLoansQuery();
+  const { data: booksResponse } = useGetBooksQuery();
+  const { data: membersResponse } = useGetMembersQuery();
+  const { data: loansResponse } = useGetLoansQuery();
+
+  const books = booksResponse?.message?.data || [];
+  const members = membersResponse?.message?.data || [];
+  const loans = loansResponse?.message?.data || [];
 
   const stats = [
     {
@@ -14,41 +28,34 @@ const Dashboard: React.FC = () => {
       value: books.length,
       icon: BookOpen,
       color: 'bg-blue-500',
-      change: '+12%'
+      change: '+12%',
     },
     {
       title: 'Active Members',
-      value: members.filter(m => m.status === 'active').length,
+      value: members.filter((m:any) => m.status === 'Active').length,
       icon: Users,
       color: 'bg-green-500',
-      change: '+8%'
+      change: '+8%',
     },
     {
       title: 'Active Loans',
-      value: loans.filter(l => l.status === 'active').length,
+      value: loans.filter((l:any) => l.status === 'Active').length,
       icon: Calendar,
       color: 'bg-yellow-500',
-      change: '+15%'
+      change: '+15%',
     },
     {
       title: 'Available Books',
-      value: books.filter(b => b.status === 'available').length,
+      value: books.filter((b) => b.status === 'Available').length,
       icon: CheckCircle,
       color: 'bg-purple-500',
-      change: '-3%'
-    }
+      change: '-3%',
+    },
   ];
 
-  const recentActivity = [
-    { action: 'Book returned', item: 'The Great Gatsby', user: 'John Smith', time: '2 hours ago' },
-    { action: 'New member registered', item: 'Sarah Johnson', user: 'System', time: '4 hours ago' },
-    { action: 'Book borrowed', item: 'To Kill a Mockingbird', user: 'Mike Wilson', time: '6 hours ago' },
-    { action: 'Book reserved', item: 'Pride and Prejudice', user: 'Emily Davis', time: '1 day ago' },
-  ];
-
-  const overdueBooks = loans.filter(loan => {
-    const returnDate = new Date(loan.returnDate);
-    return returnDate < new Date() && loan.status === 'active';
+  const overdueBooks = loans.filter((loan:any) => {
+    const returnDate = new Date(loan.return_date);
+    return returnDate < new Date() && loan.status === 'Active';
   });
 
   return (
@@ -63,14 +70,21 @@ const Dashboard: React.FC = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div
+            key={index}
+            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{stat.value}</p>
-                <p className={`text-sm mt-2 ${
-                  stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'
-                }`}>
+                <p className="text-3xl font-bold text-gray-900 mt-2">
+                  {stat.value}
+                </p>
+                <p
+                  className={`text-sm mt-2 ${
+                    stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
                   {stat.change} from last month
                 </p>
               </div>
@@ -83,31 +97,20 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Recent Activity */}
+        {/* Recent Activity (Hardcoded for now) */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
           </div>
           <div className="p-6">
             <div className="space-y-4">
-              {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-900">
-                      <span className="font-medium">{activity.action}:</span> {activity.item}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      by {activity.user} • {activity.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
+              <div className="text-gray-500 italic">No recent activity tracking from API.</div>
+              {/* Replace with real tracking when available */}
             </div>
           </div>
         </div>
 
-        {/* Overdue Books Alert */}
+        {/* Overdue Books */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center space-x-2">
@@ -123,23 +126,22 @@ const Dashboard: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {overdueBooks.slice(0, 5).map((loan, index) => {
-                  const book = books.find(b => b.id === loan.bookId);
-                  const member = members.find(m => m.id === loan.memberId);
-                  return (
-                    <div key={index} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">{book?.title}</p>
-                        <p className="text-sm text-gray-600">{member?.name}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium text-red-600">
-                          Due: {new Date(loan.returnDate).toLocaleDateString()}
-                        </p>
-                      </div>
+                {overdueBooks.slice(0, 5).map((loan:any, index:any) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-red-50 rounded-lg"
+                  >
+                    <div>
+                      <p className="font-medium text-gray-900">{loan.book_title}</p>
+                      <p className="text-sm text-gray-600">{loan.member_name}</p>
                     </div>
-                  );
-                })}
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-red-600">
+                        Due: {new Date(loan.return_date).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
