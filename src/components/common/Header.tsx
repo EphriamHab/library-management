@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// src/components/layout/Header.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Search, LogOut, User } from 'lucide-react';
@@ -60,7 +59,7 @@ const Header: React.FC = () => {
                 <span className="text-sm font-medium text-gray-700">{user.full_name}</span>
               </button>
 
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              {/* <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <div className="py-2">
                   <button className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                     <User className="w-4 h-4" />
@@ -74,7 +73,7 @@ const Header: React.FC = () => {
                     <span>Logout</span>
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
           )}
         </div>
