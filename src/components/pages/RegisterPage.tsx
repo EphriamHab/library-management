@@ -104,7 +104,6 @@ const RegisterPage: React.FC = () => {
       [name]: value
     }));
     
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -198,7 +197,6 @@ const RegisterPage: React.FC = () => {
                 </select>
               </div>
 
-              {/* Fix: Check for 'Library Member' instead of 'member' */}
               {formData.role === 'Library Member' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Membership ID</label>
@@ -220,7 +218,6 @@ const RegisterPage: React.FC = () => {
                 </div>
               )}
 
-              {/* Add Staff ID field for Librarians */}
               {formData.role === 'Librarian' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Staff ID</label>
