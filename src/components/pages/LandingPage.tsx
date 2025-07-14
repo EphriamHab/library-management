@@ -1,16 +1,17 @@
-// src/components/pages/LandingPage.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  BookOpen, 
-  Users, 
-  Calendar, 
-  Shield, 
-  BarChart3, 
+import {
+  BookOpen,
+  Users,
+  Calendar,
+  Shield,
+  BarChart3,
   ArrowRight,
   CheckCircle,
   Star
 } from 'lucide-react';
+import Footer from '../common/Footer';
+import OuterHeader from '../common/OuterHeader';
 
 const LandingPage: React.FC = () => {
   const features = [
@@ -51,36 +52,8 @@ const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-2">
-              <BookOpen className="w-8 h-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">LibraryPro</span>
-            </div>
-            <nav className="hidden md:flex space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors">Features</a>
-              <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors">About</a>
-              <a href="#contact" className="text-gray-600 hover:text-blue-600 transition-colors">Contact</a>
-            </nav>
-            <div className="flex space-x-4">
-              <Link 
-                to="/login" 
-                className="text-gray-600 hover:text-blue-600 transition-colors font-medium"
-              >
-                Sign In
-              </Link>
-              <Link 
-                to="/register" 
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
 
+     <OuterHeader/>
       {/* Hero Section */}
       <section className="relative py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -96,15 +69,15 @@ const LandingPage: React.FC = () => {
                 Made Simple
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Streamline your library operations with our comprehensive management system. 
+                Streamline your library operations with our comprehensive management system.
                 Track books, manage members, and automate workflows with ease.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link 
-                  to="/dashboard" 
+                <Link
+                  to="/dashboard"
                   className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center justify-center group"
                 >
-                  Start Free Trial
+                  Get Started
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors font-semibold">
@@ -163,14 +136,14 @@ const LandingPage: React.FC = () => {
               Everything you need to manage your library
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our comprehensive suite of tools helps you streamline operations, 
+              Our comprehensive suite of tools helps you streamline operations,
               improve member experience, and make data-driven decisions.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100"
               >
                 <div className="mb-4">{feature.icon}</div>
@@ -183,68 +156,24 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-    <section className="py-20 bg-gradient-to-r from-gray-100 via-white to-gray-100">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h2 className="text-4xl font-bold text-gray-900 mb-4">
-      Ready to transform your library?
-    </h2>
-    <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-      Join thousands of libraries already using LibraryPro to streamline their operations.
-    </p>
-    <Link 
-      to="/register" 
-      className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold inline-flex items-center"
-    >
-      Start Your Free Trial
-      <ArrowRight className="w-5 h-5 ml-2" />
-    </Link>
-  </div>
-</section>
-
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <BookOpen className="w-6 h-6 text-blue-400" />
-                <span className="text-xl font-bold">LibraryPro</span>
-              </div>
-              <p className="text-gray-400">
-                Modern library management for the digital age.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">API</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 LibraryPro. All rights reserved.</p>
-          </div>
+      <section className="py-20 bg-gradient-to-r from-gray-100 via-white to-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Ready to transform your library?
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Join thousands of libraries already using LibraryPro to streamline their operations.
+          </p>
+          <Link
+            to="/register"
+            className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold inline-flex items-center"
+          >
+            Get Started Now
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Link>
         </div>
-      </footer>
+      </section>
+      <Footer />
     </div>
   );
 };
