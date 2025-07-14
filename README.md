@@ -120,8 +120,7 @@ npm build
 ## 👤 Author
 
 **Ephrem.H**  
-Final Year Software Engineering Student
-
+Full-Stack Developer 
 ---
 
 ## 🔗 GitHub
