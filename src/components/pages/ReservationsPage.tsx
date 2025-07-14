@@ -41,7 +41,7 @@ interface ReservationDetailsModalProps {
 const ReservationsPage: React.FC = () => {
   const { data: reservationsData, isLoading: reservationsLoading, refetch: refetchReservations } = useGetReservationsQuery();
   const { data: booksData } = useGetBooksQuery();
-  const { data: membersData } = useGetMembersQuery();
+  const { data: membersData } = useGetMembersQuery({});
   const [createReservation, { isLoading: isCreatingReservation }] = useCreateReservationMutation();
 
   const reservations = reservationsData?.message?.data || [];
@@ -55,11 +55,10 @@ const ReservationsPage: React.FC = () => {
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateReservationFormData>();
 
-  // Enhanced reservations with book and member details
   const enhancedReservations = useMemo(() => {
     return reservations.map((reservation: { book: string; member: string; book_title: any; member_name: any; reservation_date: any; }) => {
       const book = books.find(b => b.name === reservation.book);
-      const member = members.find(m => m.name === reservation.member);
+      const member = members.find((m: { name: string; }) => m.name === reservation.member);
       
       return {
         ...reservation,
@@ -156,7 +155,7 @@ const ReservationsPage: React.FC = () => {
   const handleCreateReservation = async (formData: CreateReservationFormData) => {
     try {
       const selectedBook = books.find(b => b.name === formData.book);
-      const selectedMember = members.find(m => m.name === formData.member);
+      const selectedMember = members.find((m: { name: string; }) => m.name === formData.member);
       
       const response = await createReservation({
         book: formData.book,
@@ -472,8 +471,8 @@ const ReservationsPage: React.FC = () => {
                   >
                     <option value="" hidden>Select member...</option>
                     {members
-                      .filter((m) => m.status === 'Active')
-                      .map((m) => (
+                      .filter((m:any) => m.status === 'Active')
+                      .map((m:any) => (
                         <option key={m.name} value={m.name}>
                           {m.name1}
                         </option>
