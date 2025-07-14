@@ -5,7 +5,7 @@ import Sidebar from './Sidebar';
 import { Outlet } from 'react-router-dom';
 import Header from '../common/Header';
 import type { RootState } from '../../store/store';
-
+import { ToastContainer } from 'react-toastify';
 const Layout: React.FC = () => {
   const { sidebarOpen } = useSelector((state: RootState) => state.ui);
 
@@ -18,6 +18,18 @@ const Layout: React.FC = () => {
           <Outlet />
         </main>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
