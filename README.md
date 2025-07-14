@@ -27,7 +27,7 @@ src/
 
 ---
 
-## ⚙️ Getting Started
+##  Getting Started
 
 ### 1. Clone the Repository
 
@@ -50,9 +50,9 @@ npm install
 npm run dev
 ```
 
-## ✅ Features Implemented
+## Features Implemented
 
-### 🔐 Authentication
+###  Authentication
 - Login, logout, register  
 - Token-based auth (access + refresh tokens)
 
@@ -93,7 +93,7 @@ You can test manually by:
 
 ---
 
-## 🧠 Architectural Decisions
+##  Architectural Decisions
 
 - **Redux Toolkit & RTK Query**: Centralized store, standardized API layer, and caching  
 - **Tailwind CSS**: Rapid and consistent styling with responsive design  
@@ -102,7 +102,7 @@ You can test manually by:
 
 ---
 
-## ⚠️ Shortcuts & Trade-offs
+##  Shortcuts & Trade-offs
 
 - Error messages are basic — needs better UX  
 - Validation is minimal on some forms  
@@ -111,7 +111,7 @@ You can test manually by:
 
 ---
 
-## 📦 Production Build
+##  Production Build
 
 ```bash
 npm build
