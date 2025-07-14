@@ -125,7 +125,7 @@ npm build
 
 ## 🔗 GitHub
 
-[github.com/nahom-dot](https://github.com/nahom-dot)
+[https://github.com/EphriamHab](https://github.com/EphriamHab/library-management.git)
 
 ---
 
