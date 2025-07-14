@@ -15,7 +15,7 @@ import {
 
 const Dashboard: React.FC = () => {
   const { data: booksResponse } = useGetBooksQuery();
-  const { data: membersResponse } = useGetMembersQuery();
+  const { data: membersResponse } = useGetMembersQuery({});
   const { data: loansResponse } = useGetLoansQuery();
 
   const books = booksResponse?.message?.data || [];
