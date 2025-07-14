@@ -37,7 +37,7 @@ import { saveAs } from 'file-saver';
 const ReportsPage: React.FC = () => {
   const { data: loansData, isLoading: loansLoading, refetch: refetchLoans } = useGetLoansQuery();
   const { data: booksData, isLoading: booksLoading, refetch: refetchBooks } = useGetBooksQuery();
-  const { data: membersData, isLoading: membersLoading, refetch: refetchMembers } = useGetMembersQuery();
+  const { data: membersData, isLoading: membersLoading, refetch: refetchMembers } = useGetMembersQuery({});
   const { data: booksOnLoanData, isLoading: booksOnLoanLoading, refetch: refetchBooksOnLoan } = useGetBooksOnLoanQuery();
   const { data: overdueBooksData, isLoading: overdueBooksLoading, refetch: refetchOverdueBooks } = useGetOverdueBooksQuery();
   
@@ -58,7 +58,7 @@ const ReportsPage: React.FC = () => {
     const activeLoans = loans.filter(l => l.status === 'Active');
     const returnedLoans = loans.filter(l => l.status === 'Returned');
     const availableBooks = books.filter(b => b.status === 'Available');
-    const activeMembers = members.filter(m => m.status === 'Active');
+    const activeMembers = members.filter((m: { status: string; }) => m.status === 'Active');
 
     const monthlyLoans = Array.from({ length: 12 }, (_, i) => {
       const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -81,12 +81,12 @@ const ReportsPage: React.FC = () => {
     })).sort((a, b) => b.loanCount - a.loanCount);
 
     // Member activity analysis
-    const memberActivity = members.map(member => ({
+    const memberActivity = members.map((member: { name: string; }) => ({
       ...member,
       totalLoans: loans.filter(l => l.member === member.name).length,
       activeLoans: activeLoans.filter(l => l.member === member.name).length,
       overdueLoans: overdueBooks.filter((l: { member: string; }) => l.member === member.name).length,
-    })).sort((a, b) => b.totalLoans - a.totalLoans);
+    })).sort((a:any, b:any) => b.totalLoans - a.totalLoans);
 
     // Category distribution
     const categoryStats = books.reduce((acc, book) => {
@@ -174,7 +174,7 @@ const ReportsPage: React.FC = () => {
           Loans: b.loanCount
         }));
 
-        const activeMembersData = stats.memberActivity.map((m, index) => ({
+        const activeMembersData = stats.memberActivity.map((m: { name1: any; membership_id: any; totalLoans: any; activeLoans: any; overdueLoans: any; }, index: number) => ({
           Rank: index + 1,
           Name: m.name1,
           MembershipID: m.membership_id,
@@ -211,7 +211,7 @@ const ReportsPage: React.FC = () => {
           autoTable(doc!, {
             startY: (doc as any).lastAutoTable.finalY + 20,
             head: [['Rank', 'Name', 'Membership ID', 'Total Loans', 'Active Loans', 'Overdue Loans']],
-            body: activeMembersData.map(m => [m.Rank, m.Name, m.MembershipID, m.TotalLoans, m.ActiveLoans, m.OverdueLoans]),
+            body: activeMembersData.map((m: { Rank: any; Name: any; MembershipID: any; TotalLoans: any; ActiveLoans: any; OverdueLoans: any; }) => [m.Rank, m.Name, m.MembershipID, m.TotalLoans, m.ActiveLoans, m.OverdueLoans]),
             theme: 'striped'
           });
         } else {
@@ -504,7 +504,7 @@ const ReportsPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Most Active Members</h3>
           <div className="space-y-4">
-            {stats.memberActivity.slice(0, 5).map((member, index) => (
+            {stats.memberActivity.slice(0, 5).map((member:any, index:any) => (
               <div key={member.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <span className="text-sm font-bold text-gray-500 w-8 h-8 bg-white rounded-full flex items-center justify-center">
@@ -738,7 +738,7 @@ const ReportsPage: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Top 10 Most Active Members</h3>
         <div className="space-y-3">
-          {stats.memberActivity.slice(0, 10).map((member, index) => (
+          {stats.memberActivity.slice(0, 10).map((member:any, index:any) => (
             <div key={member.name} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-4">
                 <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
