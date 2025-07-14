@@ -1,6 +1,8 @@
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { useGetMembersQuery, useCreateMemberMutation, useDeleteMemberMutation, useUpdateMemberMutation } from '../../store/api';
-import { Plus, Search, Filter, Edit, Trash2, Mail, Phone, X } from 'lucide-react';
+import { Plus, Search, Filter, Edit, Trash2, Mail, Phone, X, ChevronRight, ChevronLeft } from 'lucide-react';
 import type { Member, MemberFormData } from '../../types/index';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
@@ -8,10 +10,15 @@ import { toast } from 'react-toastify';
 Modal.setAppElement('#root');
 
 const MembersPage: React.FC = () => {
-  const { data, isLoading } = useGetMembersQuery();
+   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   
+  const { data, isLoading } = useGetMembersQuery({
+    page: currentPage,
+    limit: itemsPerPage,
+    });
   const [createMember] = useCreateMemberMutation();
   const [deleteMember] = useDeleteMemberMutation();
   const [updateMember] = useUpdateMemberMutation();
@@ -28,7 +35,8 @@ const MembersPage: React.FC = () => {
     phone: ''
   });
   const [errors, setErrors] = useState<Partial<MemberFormData>>({});
-
+  
+  const pagination = data?.message?.pagination;
   const members: Member[] = data?.message?.data || [];
 
   const filteredMembers = members.filter((member) => {
@@ -43,7 +51,38 @@ const MembersPage: React.FC = () => {
     return matchesSearch && matchesFilter;
   });
 
-  // Validate membership ID format (MEM or LIB followed by 3 digits)
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (newLimit: number) => {
+    setItemsPerPage(newLimit);
+    setCurrentPage(1);
+  };
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    if (!pagination) return [];
+    
+    const { page, pages } = pagination;
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+    
+    let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(pages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+    
+    return pageNumbers;
+  };
+
   const validateMembershipId = (id: string): boolean => {
     const regex = /^(MEM|LIB)\d{3}$/;
     return regex.test(id);
@@ -333,6 +372,78 @@ const MembersPage: React.FC = () => {
             </tbody>
           </table>
         </div>
+        {pagination && pagination.pages > 1 && (
+          <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 flex justify-between sm:hidden">
+                <button
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={() => handlePageChange(Math.min(pagination.pages, currentPage + 1))}
+                  disabled={currentPage === pagination.pages}
+                  className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+              <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm text-gray-700">
+                    Showing{' '}
+                    <span className="font-medium">
+                      {((currentPage - 1) * itemsPerPage) + 1}
+                    </span>{' '}
+                    to{' '}
+                    <span className="font-medium">
+                      {Math.min(currentPage * itemsPerPage, pagination.total)}
+                    </span>{' '}
+                    of{' '}
+                    <span className="font-medium">{pagination.total}</span>{' '}
+                    results
+                  </p>
+                </div>
+                <div>
+                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <button
+                      onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                      disabled={currentPage === 1}
+                      className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    
+                    {getPageNumbers().map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                          pageNum === currentPage
+                            ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+                    
+                    <button
+                      onClick={() => handlePageChange(Math.min(pagination.pages, currentPage + 1))}
+                      disabled={currentPage === pagination.pages}
+                      className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Empty state */}
@@ -346,7 +457,6 @@ const MembersPage: React.FC = () => {
         </div>
       )}
 
-      {/* Create Member Modal */}
       <Modal
         isOpen={isCreateModalOpen}
         onRequestClose={closeModal}
@@ -576,7 +686,6 @@ const modalStyles = `
   }
 `;
 
-// Add styles to the document head
 const styleElement = document.createElement('style');
 styleElement.innerHTML = modalStyles;
 document.head.appendChild(styleElement);
