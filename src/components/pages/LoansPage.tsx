@@ -35,7 +35,7 @@ interface NewLoanFormData {
 const LoansPage: React.FC = () => {
   const { data: loansData, isLoading: loansLoading } = useGetLoansQuery();
   const { data: booksData } = useGetBooksQuery();
-  const { data: membersData } = useGetMembersQuery();
+  const { data: membersData } = useGetMembersQuery({});
   const [returnBook] = useReturnBookMutation();
   const [createLoan, { isLoading: isCreatingLoan }] = useCreateLoanMutation();
   const loans = loansData?.message?.data || [];
@@ -54,7 +54,7 @@ const LoansPage: React.FC = () => {
   const enhancedLoans = useMemo(() => {
     return loans.map(loan => {
       const book = books.find(b => b.name === loan.book);
-      const member = members.find(m => m.name === loan.member);
+      const member = members.find((m: { name: string; }) => m.name === loan.member);
       const isOverdue = new Date(loan.return_date) < new Date() && loan.status === 'Active';
       const daysOverdue = isOverdue
         ? Math.floor((new Date().getTime() - new Date(loan.return_date).getTime()) / (1000 * 60 * 60 * 24))
@@ -172,7 +172,7 @@ const LoansPage: React.FC = () => {
   const handleCreateLoan = async (formData: NewLoanFormData) => {
     try {
       const selectedBook = books.find(b => b.name === formData.book);
-      const selectedMember = members.find(m => m.name === formData.member);
+      const selectedMember = members.find((m: { name: string; }) => m.name === formData.member);
       
       const response = await createLoan({
         book: formData.book,
@@ -355,11 +355,11 @@ const LoansPage: React.FC = () => {
                   <td className="px-6 py-4">
                     <div className="space-y-3">
                       <div className="flex items-center space-x-3">
-                        <img
+                        {/* <img
                           src={'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=60&h=80&fit=crop'}
                           alt={loan.bookTitle}
                           className="w-12 h-16 object-cover rounded"
-                        />
+                        /> */}
                         <div>
                           <p className="text-sm font-medium text-gray-900">{loan.bookTitle}</p>
                           <p className="text-xs text-gray-500">by {loan.book?.author}</p>
@@ -519,7 +519,7 @@ const LoansPage: React.FC = () => {
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="" hidden>Select member…</option>
-                    {members.map((m) => (
+                    {members.map((m:any) => (
                       <option key={m.name} value={m.name}>
                         {m.name1}
                       </option>
