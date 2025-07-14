@@ -120,7 +120,7 @@ npm build
 ## 👤 Author
 
 **Ephrem.H**  
-  Full-Stack Developer 
+- Full-Stack Developer 
 ---
 
 ## 🔗 GitHub
