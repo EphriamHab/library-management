@@ -175,8 +175,11 @@ export const api = createApi({
       invalidatesTags: ["Book"],
     }),
 
-    getMembers: builder.query<MembersResponse, void>({
-      query: () => "library_app.api.members.get_members",
+    getMembers: builder.query<any, any>({
+      query: ({ page, limit } = {}) => ({
+        url: "library_app.api.members.get_members",
+        params: { page, limit },
+      }),
       providesTags: ["Member"],
     }),
     createMember: builder.mutation<Member, MemberFormData>({
